@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../pyMalleableProfileFinder/.idea/pyMalleableProfileFinder.iml" filepath="$PROJECT_DIR$/../pyMalleableProfileFinder/.idea/pyMalleableProfileFinder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pyMalleableProfileParser.iml" filepath="$PROJECT_DIR$/.idea/pyMalleableProfileParser.iml" />
+    </modules>
+  </component>
+</project>
