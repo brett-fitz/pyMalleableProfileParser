@@ -13,10 +13,12 @@ setup(
     name="pyMalleableProfileParser",
     author=__author__,
     version=__version__,
+    license=__license__,
     description="Parses Cobalt Strike malleable C2 profiles",
     long_description=readme,
     long_description_content_type="text/markdown",
-    license=__license__,
+    url='https://github.com/brett-fitz/pyMalleableProfileParser',
+    keywords=['cobalt strike', 'malleable profile', 'parser'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3.5",
