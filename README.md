@@ -5,11 +5,11 @@ Parses Cobalt Strike malleable C2 profiles.
 [![License](https://img.shields.io/github/license/brett-fitz/pyMalleableProfileParser?style=flat-square)](https://github.com/brett-fitz/pyMalleableProfileParser/blob/main/LICENSE)
 [![Issues](https://img.shields.io/github/issues/brett-fitz/pyMalleableProfileParser?style=flat-square)](https://github.com/brett-fitz/pyMalleableProfileParser/issues)
 
-![Cobalt Strike Logo](./cobalt-strike-logo.png)
+![Cobalt Strike Logo](https://raw.githubusercontent.com/brett-fitz/pyMalleableProfileParser/main/cobalt-strike-logo.png)
 
 ## Installation :gear:
 ```shell
-pip3 install pymalleableprofileparser
+pip3 install pyMalleableProfileParser
 ```
 
 ## Usage
