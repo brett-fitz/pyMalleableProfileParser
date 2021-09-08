@@ -1,6 +1,10 @@
 # pyMalleableProfileParser
 Parses Cobalt Strike malleable C2 profiles.
 
+[![Latest version released on PyPi](https://img.shields.io/pypi/v/pymalleableprofileparser?style=flat-square)](https://pypi.org/project/pyMalleableProfileParser/)
+[![License](https://img.shields.io/github/license/brett-fitz/pyMalleableProfileParser?style=flat-square)](https://github.com/brett-fitz/pyMalleableProfileParser/blob/main/LICENSE)
+[![Issues](https://img.shields.io/github/issues/brett-fitz/pyMalleableProfileParser?style=flat-square)](https://github.com/brett-fitz/pyMalleableProfileParser/issues)
+
 ![Cobalt Strike Logo](./cobalt-strike-logo.png)
 
 ## Installation :gear:
