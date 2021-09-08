@@ -9,6 +9,7 @@ Roadmap for the project.
 ## [0.3] :construction:
 * Validate Malleable Profiles
 * Native statement support 
+* Tests
 
 ## [0.2] :rocket:
 * Publish on PyPi
