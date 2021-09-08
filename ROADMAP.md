@@ -6,11 +6,11 @@ Roadmap for the project.
 ## [0.4]
 * Allow modification to Malleable Profiles
 
-## [0.3]
+## [0.3] :construction:
 * Validate Malleable Profiles
 * Native statement support 
 
-## [0.2] :construction:
+## [0.2] :rocket:
 * Publish on PyPi
 * Update docs
 
