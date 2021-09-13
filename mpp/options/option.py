@@ -12,4 +12,7 @@ class Option:
         return self.option in valid_options
 
     def __str__(self):
-        return f'set {self.option} {self.value}{DELIM}'
+        return f'set {self.option} "{self.value}"{DELIM}'
+
+    def __repr__(self):
+        return f'Option(option={self.option}, value={self.value})'

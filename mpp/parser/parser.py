@@ -1,9 +1,10 @@
 import logging
-from typing import List, Tuple, Dict
+from collections import OrderedDict
+from typing import List, Tuple, OrderedDict as OrderedDictType
 from mpp.options import Option
 from mpp.statements import Statement
-from mpp.blocks import *
-from mpp.constants import *
+from mpp.blocks import Block
+from mpp.constants import DELIM
 
 # logger
 logger = logging.getLogger('Parser')
@@ -42,15 +43,14 @@ class Parser:
                 pass
             # Option
             elif profile[i].strip()[:3] == 'set':
-                option, value = _get_option(profile[i])
-                parsed_profile[option] = Option(option=option, value=value)
+                option = _get_option(profile[i])
+                parsed_profile[option.option] = option
             # Group
             elif profile[i].strip()[-1] == '{':
-                name, group, displacement = _get_group(profile[i:])
-                logger.info(f'found group: {name}')
+                block, displacement = _get_block(profile[i:])
+                logger.info(f'found group: {block.name}')
                 i += displacement
-                parsed_block = _parse_block(name, group)
-                parsed_profile[name] = parsed_block
+                parsed_profile[block.name] = block
             # Unknown
             else:
                 raise ParsingError
@@ -58,33 +58,7 @@ class Parser:
         return parsed_profile
 
 
-def _parse_block(name: str, group: Dict):
-    if name not in PROFILE_BLOCKS:
-        raise InvalidBlock
-    if name == 'http-config':
-        pass
-    elif name == 'http-get':
-        pass
-    elif name == 'http-post':
-        pass
-    elif name == 'http-stager':
-        pass
-    elif name == 'https-certificate':
-        return HTTPSCertificate(data=group)
-    elif name == 'code-signer':
-        return CodeSigner(data=group)
-    elif name == 'dns-beacon':
-        return DNSBeacon(data=group)
-    elif name == 'stage':
-        pass
-    elif name == 'post-inject':
-        pass
-    elif name == 'post-ex':
-        pass
-
-
-
-def _get_option(line: str) -> Tuple:
+def _get_option(line: str) -> Option:
     """
     Parses an option in the following format:
         set [option] "[value]";
@@ -100,12 +74,35 @@ def _get_option(line: str) -> Tuple:
     if value[-2] != '"':
         raise InvalidOption
     logger.info(f'found option: {option} value: {value[:-2]}')
-    return option, value[:-2]
+    return Option(option=option, value=value[:-2])
 
 
-def _get_group(lines: List) -> Tuple[str, Dict, int]:
-    name = lines[0].strip().split(' ')[0]
-    group = {'statements': []}
+def _get_statement(line: str) -> Statement:
+    """
+    Parses a statement in the following formats:
+        <statement>;
+            or
+        <statement> "value";
+    :param line:
+    :return: Statement
+    """
+    # TODO better handling of Headers and Parameters
+    # TODO (BUG!) better handling of byte objects
+    # TODO (BUG!) better handling of multiline values
+    line = line.split()
+    statement = line[0]
+    value = ' '.join(line[1:])[:-1]
+    if statement[-1] == DELIM:
+        statement = statement[:-1]
+    logger.info(f'found statement: {statement} value: {value}')
+    return Statement(statement=statement, value=value)
+
+
+def _get_block(lines: List) -> Tuple[Block, int]:
+    block = Block(
+        name=lines[0].strip().split(' ')[0],
+        data=OrderedDict()
+    )
     i = 1
     while i < len(lines):
         # Blank line / Comment
@@ -113,19 +110,22 @@ def _get_group(lines: List) -> Tuple[str, Dict, int]:
             pass
         # End of group
         elif lines[i].strip() == '}':
-            return name, group, i
+            return block, i
         # Subgroup
         elif lines[i].strip()[-1] == '{':
-            subgroup_name, subgroup, displacement = _get_group(lines[i:])
-            group[subgroup_name] = subgroup
+            sub_block, displacement = _get_block(lines[i:])
+            block.data[sub_block.name] = sub_block
             i += displacement
         # Option
         elif lines[i].strip()[:3] == 'set':
-            option, value = _get_option(lines[i])
-            group[option] = value
+            option = _get_option(lines[i])
+            block.data[option.option] = option
         # Generic Statement
         elif lines[i].strip()[-1] == ';':
-            group['statements'].append(lines[i].strip())
+            statement = _get_statement(lines[i].strip())
+            block.data[statement.statement] = statement
         i += 1
+    # If we got here, then the block was not properly closed
+    raise ParsingError
 
 

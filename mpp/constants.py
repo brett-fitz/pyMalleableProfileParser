@@ -1,4 +1,4 @@
-from typing import Set, Dict
+from typing import Set
 
 # Constants
 DELIM: str = ';'
@@ -17,8 +17,8 @@ SPECIAL_STRINGS: Set[str] = {
     '\n',
     '\r',
     '\t',
-    '\u####',
-    '\x##',
+    b'\\u####',
+    b'\\x##',
     '\\'
 }
 
@@ -83,6 +83,11 @@ PROFILE_BLOCKS: Set[str] = {
     'stage',
     'post-inject',
     'post-ex'
+}
+DATA_TRANSFORM_BLOCKS: Set[str] = {
+    'metadata',
+    'output',
+    'id'
 }
 
 # http-config

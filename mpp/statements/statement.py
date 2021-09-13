@@ -13,5 +13,8 @@ class Statement:
 
     def __str__(self):
         if self.value:
-            return f'{self.statement} {self.value}{DELIM}'
+            return f'{self.statement} "{self.value}"{DELIM}'
         return f'{self.statement}{DELIM}'
+
+    def __repr__(self):
+        return f'Statement(statement={self.statement}, value={self.value})'
