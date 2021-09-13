@@ -9,8 +9,8 @@ class OptionNotFound(KeyError):
     """option was not found in the profile"""
 
 
-class GroupNotFound(KeyError):
-    """group was not found in the profile"""
+class BlockNotFound(KeyError):
+    """block was not found in the profile"""
 
 
 class MalleableProfile:

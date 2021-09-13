@@ -1,5 +1,9 @@
 import logging
 from typing import List, Tuple, Dict
+from mpp.options import Option
+from mpp.statements import Statement
+from mpp.blocks import *
+from mpp.constants import *
 
 # logger
 logger = logging.getLogger('Parser')
@@ -7,6 +11,10 @@ logger = logging.getLogger('Parser')
 
 class InvalidOption(ValueError):
     """invalid option format, expected: set [option] "[value]";"""
+
+
+class InvalidBlock(ValueError):
+    """invalid block found"""
 
 
 class ParsingError(ValueError):
@@ -35,13 +43,14 @@ class Parser:
             # Option
             elif profile[i].strip()[:3] == 'set':
                 option, value = _get_option(profile[i])
-                parsed_profile[option] = value
+                parsed_profile[option] = Option(option=option, value=value)
             # Group
             elif profile[i].strip()[-1] == '{':
                 name, group, displacement = _get_group(profile[i:])
                 logger.info(f'found group: {name}')
                 i += displacement
-                parsed_profile[name] = group
+                parsed_block = _parse_block(name, group)
+                parsed_profile[name] = parsed_block
             # Unknown
             else:
                 raise ParsingError
@@ -49,11 +58,30 @@ class Parser:
         return parsed_profile
 
 
-def _clean_list(l: List):
-    for i in l:
-        if i == '':
-            del i
-    return l
+def _parse_block(name: str, group: Dict):
+    if name not in PROFILE_BLOCKS:
+        raise InvalidBlock
+    if name == 'http-config':
+        pass
+    elif name == 'http-get':
+        pass
+    elif name == 'http-post':
+        pass
+    elif name == 'http-stager':
+        pass
+    elif name == 'https-certificate':
+        return HTTPSCertificate(data=group)
+    elif name == 'code-signer':
+        return CodeSigner(data=group)
+    elif name == 'dns-beacon':
+        return DNSBeacon(data=group)
+    elif name == 'stage':
+        pass
+    elif name == 'post-inject':
+        pass
+    elif name == 'post-ex':
+        pass
+
 
 
 def _get_option(line: str) -> Tuple:
