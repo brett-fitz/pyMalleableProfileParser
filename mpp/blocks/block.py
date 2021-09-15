@@ -1,6 +1,6 @@
 from typing import Union, List, Tuple, Set, OrderedDict
 from mpp.constants import INVALID_OPTION, INVALID_TERMINATION_STATEMENT, INVALID_STATEMENT, INVALID_BLOCK, \
-    DATA_TRANSFORM_BLOCKS, START_BLOCK_DELIM, END_BLOCK_DELIM
+    DATA_TRANSFORM_BLOCKS, START_BLOCK_DELIM, END_BLOCK_DELIM, PROFILE
 from mpp.statements import Statement
 from mpp.options import Option
 
@@ -16,10 +16,12 @@ class Block:
 
     def validate(
             self,
-            valid_options: Set,
-            valid_statements: Set,
-            valid_blocks: Set
+            name: str = ''
     ) -> Union[bool, List[Tuple]]:
+        name = self.name + '.' + name
+        valid_options = PROFILE[name]
+        valid_statements = PROFILE[name]
+        valid_blocks = PROFILE[name]
         keys = [*self.data]
         i = 0
         invalid_values = []
@@ -35,6 +37,10 @@ class Block:
                 invalid_values.append((self.data[keys[i]], INVALID_OPTION))
             elif isinstance(self.data[keys[i]], Block) and keys[i] not in valid_blocks:
                 invalid_values.append((self.data[keys[i]], INVALID_BLOCK))
+            elif isinstance(self.data[keys[i]], Block):
+                tmp = self.data[keys[i]].validate(name=name)
+                if isinstance(tmp, list):
+                    invalid_values += tmp
             i += 1
         if invalid_values:
             return invalid_values

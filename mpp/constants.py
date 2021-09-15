@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, Dict
 
 # Constants
 DELIM: str = ';'
@@ -11,15 +11,16 @@ INVALID_TERMINATION_STATEMENT: str = 'INVALID_TERMINATION_STATEMENT'
 INVALID_TRANSFORM_STATEMENT: str = 'INVALID_TRANSFORM_STATEMENT'
 INVALID_OPTION: str = 'INVALID_OPTION'
 INVALID_BLOCK: str = 'INVALID_BLOCK'
+INVALID_VARIANT: str = 'INVALID_VARIANT'
 
 # Special Strings
 SPECIAL_STRINGS: Set[str] = {
     '\n',
     '\r',
     '\t',
-    b'\\u####',
-    b'\\x##',
-    '\\'
+    r'\u####',
+    r'\x##',
+    r'\\'
 }
 
 # General Statements
@@ -248,4 +249,122 @@ POST_EX_OPTIONS: Set[str] = {
     'thread_hint',
     'amsi_disable',
     'keylogger'
+}
+
+PROFILE: Dict = {
+    'http-config': {
+        'options': HTTP_CONFIG_OPTIONS,
+        'statements': HTTP_CONFIG_STATEMENTS,
+        'blocks': set()
+    },
+    'http-get': {
+        'options': HTTP_OPTIONS,
+        'statements': set(),
+        'blocks': HTTP_BLOCKS
+    },
+    'http-get.client': {
+        'options': set(),
+        'statements': set(),
+        'blocks': HTTP_GET_CLIENT_BLOCKS
+    },
+    'http-get.server': {
+        'options': set(),
+        'statements': set(),
+        'blocks': HTTP_SERVER_BLOCKS
+    },
+    'http-get.server.output': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'http-post': {
+        'options': HTTP_OPTIONS,
+        'statements': set(),
+        'blocks': HTTP_BLOCKS
+    },
+    'http-post.client': {
+        'options': set(),
+        'statements': set(),
+        'blocks': HTTP_POST_CLIENT_BLOCKS
+    },
+    'http-post.client.id': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'http-post.client.output': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'http-post.server': {
+        'options': set(),
+        'statements': set(),
+        'blocks': HTTP_SERVER_BLOCKS
+    },
+    'http-post.server.output': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'http-stager': {
+        'options': HTTP_STAGER_OPTIONS,
+        'statements': set(),
+        'blocks': set()
+    },
+    'https-certificate': {
+        'options': HTTPS_CERTIFICATE_OPTIONS,
+        'statements': set(),
+        'blocks': set()
+    },
+    'code-signer': {
+        'options': CODE_SIGNER_OPTIONS,
+        'statements': set(),
+        'blocks': set()
+    },
+    'dns-beacon': {
+        'options': DNS_BEACON_OPTIONS,
+        'statements': set(),
+        'blocks': set()
+    },
+    'stage': {
+        'options': STAGE_OPTIONS,
+        'statements': STAGE_STATEMENTS,
+        'blocks': STAGE_BLOCKS
+    },
+    'stage.transform-x86': {
+        'options': set(),
+        'statements': STAGE_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'stage.transform-x64': {
+        'options': set(),
+        'statements': STAGE_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'process-inject': {
+        'options': PROCESS_INJECT_OPTIONS,
+        'statements': set(),
+        'blocks': PROCESS_INJECT_BLOCKS
+    },
+    'process-inject.transform-x64': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'process-inject.transform-x86': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
+        'blocks': set()
+    },
+    'process-inject.execute': {
+        'options': set(),
+        'statements': PROCESS_INJECT_EXECUTE_STATEMENTS,
+        'blocks': set()
+    },
+    'post-ex': {
+        'options': POST_EX_OPTIONS,
+        'statements': set(),
+        'blocks': set()
+    }
 }

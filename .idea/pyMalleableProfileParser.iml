@@ -5,5 +5,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="pyMalleableProfileFinder" />
+    <orderEntry type="module" module-name="malware-pcap" />
+    <orderEntry type="module" module-name="malware-pcap" />
   </component>
 </module>

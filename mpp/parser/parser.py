@@ -48,7 +48,6 @@ class Parser:
             # Group
             elif profile[i].strip()[-1] == '{':
                 block, displacement = _get_block(profile[i:])
-                logger.info(f'found group: {block.name}')
                 i += displacement
                 parsed_profile[block.name] = block
             # Unknown
@@ -103,6 +102,7 @@ def _get_block(lines: List) -> Tuple[Block, int]:
         name=lines[0].strip().split(' ')[0],
         data=OrderedDict()
     )
+    logger.info(f'found block: {block.name}')
     i = 1
     while i < len(lines):
         # Blank line / Comment
