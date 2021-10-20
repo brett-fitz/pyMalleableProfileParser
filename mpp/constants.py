@@ -23,6 +23,31 @@ SPECIAL_STRINGS: Set[str] = {
     r'\\'
 }
 
+# All Statements
+STATEMENTS: Set[str] = {
+    'append',
+    'base64',
+    'base64url',
+    'CreateRemoteThread',
+    'CreateThread',
+    'data',
+    'header',
+    'mask',
+    'netbios',
+    'netbiosu',
+    'NtQueueApcThread',
+    'NtQueueApcThread-s',
+    'parameter',
+    'prepend',
+    'print',
+    'RtlCreateUserThread',
+    'SetThreadContext'
+    'string',
+    'stringw',
+    'strrep',
+    'uri-append'
+}
+
 # General Statements
 # Data Transform
 DATA_TRANSFORM_STATEMENTS: Set[str] = {

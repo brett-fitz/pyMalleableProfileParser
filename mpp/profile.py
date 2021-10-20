@@ -1,7 +1,7 @@
 import logging
 from mpp.parser import Parser
 from mpp.constants import PROFILE_BLOCKS, PROFILE_VARIANTS, INVALID_VARIANT, INVALID_BLOCK, GLOBAL_OPTIONS, \
-    INVALID_OPTION, DNS_BEACON_OPTIONS, HTTP_CONFIG_OPTIONS, HTTP_CONFIG_STATEMENTS, HTTP_OPTIONS, HTTP_BLOCKS
+    INVALID_OPTION, DNS_BEACON_OPTIONS
 from mpp.blocks import Block
 from mpp.options import Option
 from typing import List, Tuple
@@ -53,4 +53,7 @@ class MalleableProfile:
                         invalid_values.append((self.profile[i], INVALID_OPTION))
 
     def __getattr__(self, item):
-        return self.profile[item.replace('_', '-')]
+        try:
+            return self.profile[item.replace('_', '-')]
+        except KeyError:
+            return self.profile[item]

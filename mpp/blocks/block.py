@@ -19,6 +19,8 @@ class Block:
             name: str = ''
     ) -> Union[bool, List[Tuple]]:
         name = self.name + '.' + name
+        if name[-1] == '.':
+           name = name[:-1]
         valid_options = PROFILE[name]
         valid_statements = PROFILE[name]
         valid_blocks = PROFILE[name]

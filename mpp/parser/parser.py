@@ -2,9 +2,9 @@ import logging
 from collections import OrderedDict
 from typing import List, Tuple, OrderedDict as OrderedDictType
 from mpp.options import Option
-from mpp.statements import Statement
+from mpp.statements import Statement, HeaderParameter, StringReplace
 from mpp.blocks import Block
-from mpp.constants import DELIM
+from mpp.constants import DELIM, STATEMENTS
 
 # logger
 logger = logging.getLogger('Parser')
@@ -12,6 +12,10 @@ logger = logging.getLogger('Parser')
 
 class InvalidOption(ValueError):
     """invalid option format, expected: set [option] "[value]";"""
+
+
+class InvalidStatement(ValueError):
+    """invalid statement format, expected: [statement] <optional value>;"""
 
 
 class InvalidBlock(ValueError):
@@ -68,6 +72,9 @@ def _get_option(line: str) -> Option:
     if line[:3] != 'set' and line[-1] != ';':
         raise InvalidOption
     line = line.split(' "')
+    # cover tab separated values
+    if len(line) == 1 and '\t"' in line[0]:
+        line = line[0].split('\t"')
     option = line[0].strip().split()[1]
     value = line[1]
     if value[-2] != '"':
@@ -85,16 +92,40 @@ def _get_statement(line: str) -> Statement:
     :param line:
     :return: Statement
     """
-    # TODO better handling of Headers and Parameters
     # TODO (BUG!) better handling of byte objects
-    # TODO (BUG!) better handling of multiline values
-    line = line.split()
-    statement = line[0]
-    value = ' '.join(line[1:])[:-1]
-    if statement[-1] == DELIM:
-        statement = statement[:-1]
-    logger.info(f'found statement: {statement} value: {value}')
-    return Statement(statement=statement, value=value)
+    line = line.strip()
+    tmp = line.split()
+    statement = tmp[0]
+    value = line[len(statement):].strip()
+    if value[-1] != DELIM:
+        raise InvalidStatement
+    else:
+        value = value[:-1]
+    if statement == 'parameter' or statement == 'header':
+        if len(value.split(' "')) > 1:
+            key = value.split(' "')[0].replace('"', '')
+            value = value.split(' "')[1].replace('"', '')
+            logger.info(f'found statement: {statement} key: {key} value: {value}')
+            return HeaderParameter(statement=statement, key=key, value=value)
+        value = value.replace('"', '')
+        logger.info(f'found statement: {statement} value: {value}')
+        return HeaderParameter(statement=statement, key=value)
+    elif statement == 'strrep':
+        line = value
+        x = 1
+        while x < len(line):
+            if line[x] == '"' and line[x - 1] != '\\':
+                string = line[:x + 1]
+                replace = line[x + 1:].strip()
+                break
+            x += 1
+        return StringReplace(statement=statement, string=string, replace=replace)
+    else:
+        if len(value) > 0:
+            if value[0] == '"' and value[-1] == '"':
+                value = value[1:-1]
+        logger.info(f'found statement: {statement} value: {value}')
+        return Statement(statement=statement, value=value)
 
 
 def _get_block(lines: List) -> Tuple[Block, int]:
@@ -105,14 +136,19 @@ def _get_block(lines: List) -> Tuple[Block, int]:
     logger.info(f'found block: {block.name}')
     i = 1
     while i < len(lines):
-        # Blank line / Comment
+        # Blank line
         if lines[i].strip() == '':
+            logger.info(f'skipping blank line: {i}')
+            pass
+        # Comment
+        elif lines[i].strip()[0] == '#':
+            logger.info(f'skipping comment line: {i}')
             pass
         # End of group
         elif lines[i].strip() == '}':
             return block, i
         # Subgroup
-        elif lines[i].strip()[-1] == '{':
+        elif lines[i].strip()[-1] == '{' and lines[i].strip()[-2:] != '"{':
             sub_block, displacement = _get_block(lines[i:])
             block.data[sub_block.name] = sub_block
             i += displacement
@@ -121,9 +157,29 @@ def _get_block(lines: List) -> Tuple[Block, int]:
             option = _get_option(lines[i])
             block.data[option.option] = option
         # Generic Statement
-        elif lines[i].strip()[-1] == ';':
-            statement = _get_statement(lines[i].strip())
-            block.data[statement.statement] = statement
+        elif lines[i].strip().replace(';', '').split()[0] in STATEMENTS:
+            # Single line statement
+            if lines[i].strip()[-1] == ';':
+                statement = _get_statement(lines[i].strip())
+            else:
+                # Multi line statement
+                statement_lines = ''
+                while i < len(lines):
+                    if lines[i].strip()[-2:] == '";' and lines[i].strip()[-3:] != '\\";':
+                        statement_lines += lines[i]
+                        break
+                    else:
+                        statement_lines += lines[i]
+                        i += 1
+                statement = _get_statement(statement_lines.strip())
+            if isinstance(statement, HeaderParameter):
+                block.data[statement.key] = statement
+            elif isinstance(statement, StringReplace):
+                block.data[statement.string] = statement
+            else:
+                if statement.value == '':
+                    block.data[statement.statement] = statement
+                block.data[statement.value] = statement
         i += 1
     # If we got here, then the block was not properly closed
     raise ParsingError
