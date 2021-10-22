@@ -1,12 +1,13 @@
 # Roadmap
 Roadmap for the project.
 
-*Updated: 2021-09-07*
+*Updated: 2021-10-21*
 
-## [0.4]
+## [0.4] :construction:
 * Allow modification to Malleable Profiles
+* Write Malleable Profiles
 
-## [0.3] :construction:
+## [0.3] :rocket:
 * Validate Malleable Profiles
 * Native statement support 
 * Tests

@@ -7,10 +7,17 @@ Parses Cobalt Strike malleable C2 profiles.
 
 ![Cobalt Strike Logo](https://raw.githubusercontent.com/brett-fitz/pyMalleableProfileParser/main/cobalt-strike-logo.png)
 
+
 ## Installation :gear:
 ```shell
 pip3 install pyMalleableProfileParser
 ```
+
+### Upgrading to the latest version
+```shell
+pip3 install --upgrade pyMalleableProfileParser
+```
+
 
 ## Usage
 
@@ -18,68 +25,98 @@ pip3 install pyMalleableProfileParser
 ```python
 from mpp import MalleableProfile
 mp = MalleableProfile(profile='/path/to/profile')
-mp.profile      # profile as a dictionary
+mp.profile
 ```
 
 ### Get attributes easily
+
+### Options
+Here is an example of getting the global option `jitter`:
 ```python
-mp.sleeptime        # option
-mp.http_get         # group
+>> mp.jitter        
+Option(option="jitter", value="0")
+>> mp.jitter.option
+'jitter'
+>> mp.jitter.value
+'0'
+```
+You can also access options in any block:
+```python
+>> mp.http_get.uri
+Option(option="uri", value="/s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books")
 ```
 
-### Profile attribute structure (dict)
+### Statements
+You can get statements in any block or sub-block:
 ```python
-profile = {
-    'option': '',
-    'group_name': {
-        'option': '',
-        'statements': ['statement'],
-        'sub_group_name': {
-            'option': '',
-            'statements': ['statement'],
-        }
-    }
-}
+>> mp.http_get.client.Host
+Statement(statement=header, key="Host", value="www.amazon.com")
 ```
+```python
+>> mp = MalleableProfile('bing_maps.profile')
+>> mp.stage.transform_x86.ReflectiveLoader
+Statement(statement=strrep, string="ReflectiveLoader", replace="")
+```
+
+### Blocks
+Like statements, you can access any block or sub-block:
+```python
+>> mp.http_get
+Block(name=http-get, data=[Option(option="uri", value="/s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books"), 
+Block(name=client, data=[Statement(statement=header, key="Accept", value="*/*"), Statement(statement=header, key="Host", 
+value="www.amazon.com"), Block(name=metadata, data=[Statement(statement=base64, value=""), Statement(statement=prepend, 
+value="session-token="), Statement(statement=prepend, value="skin=noskin;"), Statement(statement=append, 
+value="csm-hit=s-24KU11BB82RZSYGJ3BDK|1419899012996"), Statement(statement=header, key="Cookie", value="")])]), 
+Block(name=server, data=[Statement(statement=header, key="Server", value="Server"), Statement(statement=header, 
+key="x-amz-id-1", value="THKUYEZKCKPGY5T42PZT"), Statement(statement=header, key="x-amz-id-2", 
+value="a21yZ2xrNDNtdGRsa212bGV3YW85amZuZW9ydG5rZmRuZ2tmZGl4aHRvNDVpbgo="), Statement(statement=header, 
+key="X-Frame-Options", value="SAMEORIGIN"), Statement(statement=header, key="Content-Encoding", value="gzip"), Block(
+name=output, data=[Statement(statement=print, value="")])])])
+>> mp.http_get.server.output
+Block(name=output, data=[Statement(statement=print, value="")])
+```
+
+
+### Profile Structure (Dict)
+
 **Example: amazon.profile**
 ```python
-{'sleeptime': '5000',
- 'jitter': '0',
- 'maxdns': '255',
- 'useragent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
- 'http-get': {'statements': [],
-  'uri': '/s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books',
-  'client': {'statements': ['header "Accept" "*/*";',
-    'header "Host" "www.amazon.com";'],
-   'metadata': {'statements': ['base64;',
-     'prepend "session-token=";',
-     'prepend "skin=noskin;";',
-     'append "csm-hit=s-24KU11BB82RZSYGJ3BDK|1419899012996";',
-     'header "Cookie";']}},
-  'server': {'statements': ['header "Server" "Server";',
-    'header "x-amz-id-1" "THKUYEZKCKPGY5T42PZT";',
-    'header "x-amz-id-2" "a21yZ2xrNDNtdGRsa212bGV3YW85amZuZW9ydG5rZmRuZ2tmZGl4aHRvNDVpbgo=";',
-    'header "X-Frame-Options" "SAMEORIGIN";',
-    'header "Content-Encoding" "gzip";'],
-   'output': {'statements': ['print;']}}},
- 'http-post': {'statements': [],
-  'uri': '/N4215/adj/amzn.us.sr.aps',
-  'client': {'statements': ['header "Accept" "*/*";',
-    'header "Content-Type" "text/xml";',
-    'header "X-Requested-With" "XMLHttpRequest";',
-    'header "Host" "www.amazon.com";',
-    'parameter "sz" "160x600";',
-    'parameter "oe" "oe=ISO-8859-1;";',
-    'parameter "s" "3717";',
-    'parameter "dc_ref" "http%3A%2F%2Fwww.amazon.com";'],
-   'id': {'statements': ['parameter "sn";']},
-   'output': {'statements': ['base64;', 'print;']}},
-  'server': {'statements': ['header "Server" "Server";',
-    'header "x-amz-id-1" "THK9YEZJCKPGY5T42OZT";',
-    'header "x-amz-id-2" "a21JZ1xrNDNtdGRsa219bGV3YW85amZuZW9zdG5rZmRuZ2tmZGl4aHRvNDVpbgo=";',
-    'header "X-Frame-Options" "SAMEORIGIN";',
-    'header "x-ua-compatible" "IE=edge";'],
-   'output': {'statements': ['print;']}}}}
+{'sleeptime': Option(option="sleeptime", value="5000"),
+ 'jitter': Option(option="jitter", value="0"),
+ 'maxdns': Option(option="maxdns", value="255"),
+ 'useragent': Option(option="useragent", value="Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"),
+ 'http-get': Block(name=http-get, data=[Option(option="uri", value="/s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books"), 
+                                        Block(name=client, data=[Statement(statement=header, key="Accept", value="*/*"), 
+                                                                 Statement(statement=header, key="Host", value="www.amazon.com"), 
+                                                                 Block(name=metadata, data=[Statement(statement=base64, value=""), 
+                                                                                            Statement(statement=prepend, value="session-token="), 
+                                                                                            Statement(statement=prepend, value="skin=noskin;"), 
+                                                                                            Statement(statement=append, value="csm-hit=s-24KU11BB82RZSYGJ3BDK|1419899012996"), 
+                                                                                            Statement(statement=header, key="Cookie", value="")])]), 
+                                        Block(name=server, data=[Statement(statement=header, key="Server", value="Server"), 
+                                                                 Statement(statement=header, key="x-amz-id-1", value="THKUYEZKCKPGY5T42PZT"), 
+                                                                 Statement(statement=header, key="x-amz-id-2", value="a21yZ2xrNDNtdGRsa212bGV3YW85amZuZW9ydG5rZmRuZ2tmZGl4aHRvNDVpbgo="), 
+                                                                 Statement(statement=header, key="X-Frame-Options", value="SAMEORIGIN"), 
+                                                                 Statement(statement=header, key="Content-Encoding", value="gzip"), 
+                                                                 Block(name=output, data=[Statement(statement=print, value="")])])]),
+ 'http-post': Block(name=http-post, data=[Option(option="uri", value="/N4215/adj/amzn.us.sr.aps"), 
+                                          Block(name=client, data=[Statement(statement=header, key="Accept", value="*/*"), 
+                                                                   Statement(statement=header, key="Content-Type", value="text/xml"), 
+                                                                   Statement(statement=header, key="X-Requested-With", value="XMLHttpRequest"), 
+                                                                   Statement(statement=header, key="Host", value="www.amazon.com"), 
+                                                                   Statement(statement=parameter, key="sz", value="160x600"), 
+                                                                   Statement(statement=parameter, key="oe", value="oe=ISO-8859-1;"), 
+                                                                   Block(name=id, data=[Statement(statement=parameter, key="sn", value="")]), 
+                                                                   Statement(statement=parameter, key="s", value="3717"), 
+                                                                   Statement(statement=parameter, key="dc_ref", value="http%3A%2F%2Fwww.amazon.com"), 
+                                                                   Block(name=output, data=[Statement(statement=base64, value=""), 
+                                                                                            Statement(statement=print, value="")])]), 
+                                          Block(name=server, data=[Statement(statement=header, key="Server", value="Server"), 
+                                                                   Statement(statement=header, key="x-amz-id-1", value="THK9YEZJCKPGY5T42OZT"), 
+                                                                   Statement(statement=header, key="x-amz-id-2", value="a21JZ1xrNDNtdGRsa219bGV3YW85amZuZW9zdG5rZmRuZ2tmZGl4aHRvNDVpbgo="), 
+                                                                   Statement(statement=header, key="X-Frame-Options", value="SAMEORIGIN"), 
+                                                                   Statement(statement=header, key="x-ua-compatible", value="IE=edge"), 
+                                                                   Block(name=output, data=[Statement(statement=print, value="")])])])}
 ```
 
 ## Help :construction_worker:
