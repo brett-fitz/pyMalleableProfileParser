@@ -4,9 +4,13 @@ from mpp.options import Option
 from mpp.statements import Statement, HeaderParameter, StringReplace
 from mpp.blocks import Block
 from mpp.constants import DELIM, STATEMENTS
+import re
 
 # logger
 logger = logging.getLogger('Parser')
+
+line_with_comment_regex = re.compile('(?<=;)\s*#.*')
+block_with_comment_regex = re.compile('(?<={)\s*#.*')
 
 
 class InvalidOption(ValueError):
@@ -41,6 +45,7 @@ class Parser:
             if profile[i].strip() == '':
                 logger.info(f'skipping blank line: {i}')
                 pass
+            # Comment Line
             elif profile[i].strip()[0] == '#':
                 logger.info(f'skipping comment line: {i}')
                 pass
@@ -53,8 +58,12 @@ class Parser:
                 block, displacement = _get_block(profile[i:])
                 i += displacement
                 parsed_profile[block.name] = block
+            elif block_with_comment_regex.search(profile[i].strip()):
+                block, displacement = _get_block(profile[i:])
+                i += displacement
             # Unknown
             else:
+                print(profile[i])
                 raise ParsingError
             i += 1
         return parsed_profile
@@ -68,8 +77,14 @@ def _get_option(line: str) -> Option:
     :return: Tuple(option, value)
     """
     line = line.strip()
-    if line[:3] != 'set' and line[-1] != ';':
+    if line[:3] != 'set':
         raise InvalidOption
+    if line[-1] != ';':
+        match = line_with_comment_regex.search(line)
+        if match:
+            line = line[:match.span()[0]]
+        else:
+            raise InvalidOption
     line = line.split(' "')
     # cover tab separated values
     if len(line) == 1 and '\t"' in line[0]:
@@ -141,6 +156,10 @@ def _get_statement(line: str) -> Statement:
 
 
 def _get_block(lines: List) -> Tuple[Block, int]:
+    # Throw away comment if found
+    match = block_with_comment_regex.search(lines[0].strip())
+    if match:
+        lines[0] = lines[0].strip()[:match.span()[0]]
     # Parse name + variant if available
     line = lines[0].strip().split('{')[0].strip().split(' "')
     name = line[0]
@@ -170,12 +189,8 @@ def _get_block(lines: List) -> Tuple[Block, int]:
             pass
         # End of group
         elif lines[i].strip() == '}':
+            logger.info(f'end of block: {block.name}')
             return block, i
-        # Subgroup
-        elif lines[i].strip()[-1] == '{' and lines[i].strip()[-2:] != '"{':
-            sub_block, displacement = _get_block(lines[i:])
-            block.data.append(sub_block)
-            i += displacement
         # Option
         elif lines[i].strip()[:3] == 'set':
             option = _get_option(lines[i])
@@ -185,6 +200,10 @@ def _get_block(lines: List) -> Tuple[Block, int]:
             # Single line statement
             if lines[i].strip()[-1] == ';':
                 statement = _get_statement(lines[i].strip())
+            # Single line statement with comment
+            elif line_with_comment_regex.search(lines[i].strip()):
+                match = line_with_comment_regex.search(lines[i].strip())
+                statement = _get_statement(lines[i].strip()[:match.span()[0]])
             else:
                 # Multi line statement
                 statement_lines = ''
@@ -197,6 +216,17 @@ def _get_block(lines: List) -> Tuple[Block, int]:
                         i += 1
                 statement = _get_statement(statement_lines.strip())
             block.data.append(statement)
+        # Subgroup
+        elif lines[i].strip()[-1] == '{' and lines[i].strip()[-2:] != '"{':
+            sub_block, displacement = _get_block(lines[i:])
+            block.data.append(sub_block)
+            i += displacement
+        elif block_with_comment_regex.search(lines[i].strip()):
+            match = block_with_comment_regex.search(lines[i].strip())
+            lines[i] = lines[i].strip()[:match.span()[0]]
+            sub_block, displacement = _get_block(lines[i:])
+            block.data.append(sub_block)
+            i += displacement
         i += 1
     # If we got here, then the block was not properly closed
     raise ParsingError
