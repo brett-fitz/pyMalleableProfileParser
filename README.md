@@ -78,11 +78,26 @@ Block(name=output, data=[Statement(statement=print, value="")])
 
 
 ## Validate a Profile
+By default, `validate()` will validate Malleable Profiles for 4.0+. You can also specify a specific version. Note: a
+warning will be displayed when setting dns options globally but will fail the validation if you specify version `4.3`.
+
+**Example**
 ```python
 >>> from mpp.profile import MalleableProfile
 >>> mp = MalleableProfile('bing_maps.profile')
 >>> mp.validate()
+starting with v4.3, dns options have been moved into 'dns-beacon' block: dns_idle
+starting with v4.3, dns options have been moved into 'dns-beacon' block: maxdns
+starting with v4.3, dns options have been moved into 'dns-beacon' block: dns_sleep
+starting with v4.3, dns options have been moved into 'dns-beacon' block: dns_stager_prepend
+starting with v4.3, dns options have been moved into 'dns-beacon' block: dns_stager_subhost
+starting with v4.3, dns options have been moved into 'dns-beacon' block: dns_max_txt
+starting with v4.3, dns options have been moved into 'dns-beacon' block: dns_ttl
 True
+>>> mp.validate(version=4.3)
+[(Option(option="dns_idle", value="8.8.8.8"), 'INVALID_OPTION'), (Option(option="maxdns", value="245"), 'INVALID_OPTION'), (Option(option="dns_sleep", value="0"), 'INVALID_OPTION'), (Option(option="dns_stager_prepend", value=""), 'INVALID_OPTION'), (Option(option="dns_stager_subhost", value=""), 'INVALID_OPTION'), (Option(option="dns_max_txt", value="252"), 'INVALID_OPTION'), (Option(option="dns_ttl", value="1"), 'INVALID_OPTION')]
+>>> 
+
 ```
 
 
