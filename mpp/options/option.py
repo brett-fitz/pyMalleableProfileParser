@@ -15,4 +15,4 @@ class Option:
         return f'set {self.option} "{self.value}"{DELIM}'
 
     def __repr__(self):
-        return f'Option(option={self.option}, value={self.value})'
+        return f'Option(option="{self.option}", value="{self.value}")'

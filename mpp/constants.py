@@ -107,6 +107,7 @@ PROFILE_BLOCKS: Set[str] = {
     'code-signer',
     'dns-beacon',
     'stage',
+    'process-inject',
     'post-inject',
     'post-ex'
 }
@@ -289,12 +290,17 @@ PROFILE: Dict = {
     },
     'http-get.client': {
         'options': set(),
-        'statements': set(),
+        'statements': HTTP_CLIENT_STATEMENTS,
         'blocks': HTTP_GET_CLIENT_BLOCKS
+    },
+    'http-get.client.metadata': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
+        'blocks': set()
     },
     'http-get.server': {
         'options': set(),
-        'statements': set(),
+        'statements': HTTP_CLIENT_STATEMENTS,
         'blocks': HTTP_SERVER_BLOCKS
     },
     'http-get.server.output': {
@@ -309,7 +315,7 @@ PROFILE: Dict = {
     },
     'http-post.client': {
         'options': set(),
-        'statements': set(),
+        'statements': HTTP_CLIENT_STATEMENTS,
         'blocks': HTTP_POST_CLIENT_BLOCKS
     },
     'http-post.client.id': {
@@ -324,7 +330,7 @@ PROFILE: Dict = {
     },
     'http-post.server': {
         'options': set(),
-        'statements': set(),
+        'statements': HTTP_CLIENT_STATEMENTS,
         'blocks': HTTP_SERVER_BLOCKS
     },
     'http-post.server.output': {
@@ -335,6 +341,21 @@ PROFILE: Dict = {
     'http-stager': {
         'options': HTTP_STAGER_OPTIONS,
         'statements': set(),
+        'blocks': HTTP_BLOCKS
+    },
+    'http-stager.client': {
+        'options': set(),
+        'statements': HTTP_CLIENT_STATEMENTS,
+        'blocks': set()
+    },
+    'http-stager.server': {
+        'options': set(),
+        'statements': HTTP_CLIENT_STATEMENTS,
+        'blocks': HTTP_SERVER_BLOCKS
+    },
+    'http-stager.server.output': {
+        'options': set(),
+        'statements': DATA_TRANSFORM_STATEMENTS,
         'blocks': set()
     },
     'https-certificate': {
