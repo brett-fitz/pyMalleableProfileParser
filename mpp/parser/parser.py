@@ -1,6 +1,5 @@
 import logging
-from collections import OrderedDict
-from typing import List, Tuple, OrderedDict as OrderedDictType
+from typing import List, Tuple
 from mpp.options import Option
 from mpp.statements import Statement, HeaderParameter, StringReplace
 from mpp.blocks import Block
