@@ -77,7 +77,16 @@ Block(name=output, data=[Statement(statement=print, value="")])
 ```
 
 
-### Profile Structure (Dict)
+## Validate a Profile
+```python
+>>> from mpp.profile import MalleableProfile
+>>> mp = MalleableProfile('bing_maps.profile')
+>>> mp.validate()
+True
+```
+
+
+## Profile Structure (Dict)
 
 **Example: amazon.profile**
 ```python
