@@ -31,7 +31,7 @@ class Block:
             if i == len(self.data) - 1 and self.name in DATA_TRANSFORM_BLOCKS:
                 if self.data[i].statement not in TERMINATION_STATEMENTS:
                     invalid_values.append((self.data[i], INVALID_TERMINATION_STATEMENT))
-                elif self.name == 'output' and self.data[i].statement != 'print':
+                elif self.name == 'output' and self.data[i].statement != 'print' and 'client' not in name:
                     invalid_values.append((self.data[i], INVALID_TERMINATION_STATEMENT))
             elif isinstance(self.data[i], Statement) and self.data[i].statement not in valid_statements:
                 invalid_values.append((self.data[i], INVALID_STATEMENT))
