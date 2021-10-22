@@ -48,9 +48,12 @@ class MalleableProfile:
                     invalid_values += tmp
             elif isinstance(self.profile[i], Option) and self.profile[i].option not in GLOBAL_OPTIONS:
                 # check if dns-beacon option (4.0-4.2)
-                if self.profile[i] in DNS_BEACON_OPTIONS:
+                if self.profile[i].option in DNS_BEACON_OPTIONS:
                     if version >= 4.3:
                         invalid_values.append((self.profile[i], INVALID_OPTION))
+                    else:
+                        logger.warning(f'starting with v4.3, dns options have been moved into \'dns-beacon\' block: '
+                                       f'{self.profile[i].option}')
         if invalid_values:
             return invalid_values
         return True
