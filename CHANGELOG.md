@@ -5,6 +5,7 @@ The format is based on [changelog.md](https://changelog.md/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.3] - 2021-10-21
+* Complete overhaul of data types
 * Validate Malleable Profiles
 * Native statement support 
 * Tests
