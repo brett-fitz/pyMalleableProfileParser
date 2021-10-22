@@ -25,7 +25,7 @@ pip3 install --upgrade pyMalleableProfileParser
 ```python
 from mpp import MalleableProfile
 mp = MalleableProfile(profile='/path/to/profile')
-mp.profile      # profile as a dictionary
+mp.profile
 ```
 
 ### Get attributes easily
@@ -51,6 +51,9 @@ You can get statements in any block or sub-block:
 ```python
 >> mp.http_get.client.Host
 Statement(statement=header, key="Host", value="www.amazon.com")
+```
+```python
+>> mp = MalleableProfile('bing_maps.profile')
 >> mp.stage.transform_x86.ReflectiveLoader
 Statement(statement=strrep, string="ReflectiveLoader", replace="")
 ```
