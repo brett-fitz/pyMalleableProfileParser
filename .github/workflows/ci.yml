@@ -28,7 +28,7 @@ jobs:
           architecture: x64
 
       - name: Install pyMalleableProfileParser
-        run: pip3 setup .
+        run: pip3 install .
 
       - name: Run Tests
         run: python3 -m unittest tests/test.py
