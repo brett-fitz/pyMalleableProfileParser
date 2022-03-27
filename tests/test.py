@@ -19,13 +19,13 @@ class TestMalleableProfileParser(unittest.TestCase):
     bing_maps = MalleableProfile(f'{path}bing_maps.profile')
 
     def test_bing_maps_profile_option(self):
-        self.assertEqual(bing_maps.sleeptime.value, '38500')
+        self.assertEqual(self.bing_maps.sleeptime.value, '38500')
 
     def test_bing_maps_profile_statement(self):
         self.assertEqual(self.bing_maps.http_get.client.metadata.base64.value, '')
 
     def test_bing_maps_profile_validation(self):
-        self.assertTrue(bing_maps.validate())
+        self.assertTrue(self.bing_maps.validate())
 
     mayo_clinic = MalleableProfile(f'{path}mayoclinic.profile')
 
