@@ -44,11 +44,9 @@ class Parser:
             # Blank line
             if profile[i].strip() == '':
                 logger.info(f'skipping blank line: {i}')
-                pass
             # Comment Line
             elif profile[i].strip()[0] == '#':
                 logger.info(f'skipping comment line: {i}')
-                pass
             # Option
             elif profile[i].strip()[:3] == 'set':
                 option = _get_option(profile[i])
@@ -182,11 +180,9 @@ def _get_block(lines: List) -> Tuple[Block, int]:
         # Blank line
         if lines[i].strip() == '':
             logger.info(f'skipping blank line: {i}')
-            pass
         # Comment
         elif lines[i].strip()[0] == '#':
             logger.info(f'skipping comment line: {i}')
-            pass
         # End of group
         elif lines[i].strip() == '}':
             logger.info(f'end of block: {block.name}')

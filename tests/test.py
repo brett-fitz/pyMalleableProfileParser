@@ -1,59 +1,42 @@
 from mpp.profile import MalleableProfile
+import unittest
 
 path = __file__[:-7]
 
-# Amazon
-print('[*] running amazon test')
-amazon = MalleableProfile(f'{path}amazon.profile')
-if amazon.jitter.value == '0':
-    print('[+] passed global option test')
-else:
-    print('[!] failed global option test')
 
-if amazon.http_get.client.Host.value == 'www.amazon.com':
-    print('[+] passed sub-block statement test')
-else:
-    print('[!] failed sub-block statement test')
+class TestMalleableProfileParser(unittest.TestCase):
+    amazon = MalleableProfile(f'{path}amazon.profile')
 
-if isinstance(amazon.validate(), bool):
-    print('[+] passed validate test')
-else:
-    print('[!] failed validate test')
+    def test_amazon_profile_option(self):
+        self.assertEqual(self.amazon.jitter.value, '0')
 
+    def test_amazon_profile_statement(self):
+        self.assertEqual(self.amazon.http_get.client.Host.value, 'www.amazon.com')
 
-# Bing Maps
-print('[*] running bing_maps test')
-bing_maps = MalleableProfile(f'{path}bing_maps.profile')
-if bing_maps.sleeptime.value == '38500':
-    print('[+] passed global option test')
-else:
-    print('[!] failed global option test')
+    def test_amazon_profile_validation(self):
+        self.assertTrue(isinstance(self.amazon.validate(), bool))
 
-if bing_maps.http_get.client.metadata.base64.value == '':
-    print('[+] passed sub-block statement test')
-else:
-    print('[!] failed sub-block statement test')
+    bing_maps = MalleableProfile(f'{path}bing_maps.profile')
 
-if isinstance(bing_maps.validate(), bool):
-    print('[+] passed validate test')
-else:
-    print('[!] failed validate test')
+    def test_bing_maps_profile_option(self):
+        self.assertEqual(bing_maps.sleeptime.value, '38500')
 
+    def test_bing_maps_profile_statement(self):
+        self.assertEqual(self.bing_maps.http_get.client.metadata.base64.value, '')
 
-# Mayo Clinic
-print('[*] running mayoclinic test')
-mayo_clinic = MalleableProfile(f'{path}mayoclinic.profile')
-if mayo_clinic.useragent.value == 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko':
-    print('[+] passed global option test')
-else:
-    print('[!] failed global option test')
+    def test_bing_maps_profile_validation(self):
+        self.assertTrue(bing_maps.validate())
 
-if mayo_clinic.stage.transform_x86.ReflectiveLoader.replace == '':
-    print('[+] passed sub-block statement test')
-else:
-    print('[!] failed sub-block statement test')
+    mayo_clinic = MalleableProfile(f'{path}mayoclinic.profile')
 
-if isinstance(mayo_clinic.validate(), list):
-    print('[+] passed validate test')
-else:
-    print('[!] failed validate test')
+    def test_mayo_clinic_profile_option(self):
+        self.assertEqual(
+            self.mayo_clinic.useragent.value,
+            'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko'
+        )
+
+    def test_mayo_clinic_profile_statement(self):
+        self.assertEqual(self.mayo_clinic.stage.transform_x86.ReflectiveLoader.replace,'')
+
+    def test_mayo_clinic_profile_validation(self):
+        self.assertTrue(isinstance(self.mayo_clinic.validate(), list))
