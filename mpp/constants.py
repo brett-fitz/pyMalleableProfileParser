@@ -41,7 +41,7 @@ STATEMENTS: Set[str] = {
     'prepend',
     'print',
     'RtlCreateUserThread',
-    'SetThreadContext'
+    'SetThreadContext',
     'string',
     'stringw',
     'strrep',
