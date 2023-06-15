@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "pyMalleableProfileParser"
+version = "0.4.0"
+description = "Parses Cobalt Strike malleable profiles."
+authors = ["Brett Fitzpatrick <brett.fitzpatrick@ironnetcybersecurity.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/brett-fitz/pyMalleableProfileParser"
+repository = "https://github.com/brett-fitz/pyMalleableProfileParser"
+keywords = ["cobalt strike", "malleable profile", "parser"]
+classifiers = ["Development Status :: 4 - Beta"]
+packages = [
+    { include = "mpp" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.2"
+pylint = "^2.17.4"
+ipykernel = "^6.23.2"
+gitpython = "^3.1.31"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

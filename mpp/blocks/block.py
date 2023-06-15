@@ -1,11 +1,18 @@
-from typing import Union, List, Tuple
-from mpp.constants import INVALID_OPTION, INVALID_TERMINATION_STATEMENT, INVALID_STATEMENT, INVALID_BLOCK, \
-    DATA_TRANSFORM_BLOCKS, PROFILE, TERMINATION_STATEMENTS
-from mpp.statements import Statement, HeaderParameter, StringReplace
+"""mpp.blocks module: block
+"""
+from typing import List, Tuple, Union
+
+from mpp.constants import (DATA_TRANSFORM_BLOCKS, INVALID_BLOCK,
+                           INVALID_OPTION, INVALID_STATEMENT,
+                           INVALID_TERMINATION_STATEMENT, PROFILE,
+                           TERMINATION_STATEMENTS)
 from mpp.options import Option
+from mpp.statements import HeaderParameter, Statement, StringReplace
 
 
 class Block:
+    """Block Class
+    """
 
     def __init__(self, name: str, data: List, variant: str = None):
         self.name = name
@@ -79,4 +86,3 @@ class Block:
 
     def __repr__(self):
         return f'Block(name={self.name}, data={self.data})'
-

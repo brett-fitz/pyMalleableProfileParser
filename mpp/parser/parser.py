@@ -1,35 +1,30 @@
+"""mpp.parser module: parser
+"""
 import logging
+import re
 from typing import List, Tuple
-from mpp.options import Option
-from mpp.statements import Statement, HeaderParameter, StringReplace
+
 from mpp.blocks import Block
 from mpp.constants import DELIM, STATEMENTS
-import re
+from mpp.options import Option
+from mpp.parser.exceptions import (
+    InvalidBlock,
+    InvalidOption,
+    InvalidStatement,
+    ParsingError
+)
+from mpp.statements import HeaderParameter, Statement, StringReplace
 
 # logger
-logger = logging.getLogger('Parser')
+logger = logging.getLogger(__file__)
 
 line_with_comment_regex = re.compile('(?<=;)\s*#.*')
 block_with_comment_regex = re.compile('(?<={)\s*#.*')
 
 
-class InvalidOption(ValueError):
-    """invalid option format, expected: set [option] "[value]";"""
-
-
-class InvalidStatement(ValueError):
-    """invalid statement format, expected: [statement] <optional value>;"""
-
-
-class InvalidBlock(ValueError):
-    """invalid block found"""
-
-
-class ParsingError(ValueError):
-    """parsing error when reading profile"""
-
-
 class Parser:
+    """mpp Parser Class
+    """
 
     @staticmethod
     def parse_config(profile: List):

@@ -1,3 +1,7 @@
+"""mpp module: Constants
+
+Package-wide constants are stored here.
+"""
 from typing import Set, Dict
 
 # Constants

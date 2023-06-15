@@ -1,8 +1,17 @@
+"""mpp.options module: Option
+"""
 from typing import Set
 from mpp.constants import DELIM
 
 
+__all__ = [
+    "Option"
+]
+
+
 class Option:
+    """Option Class
+    """
 
     def __init__(self, option: str, value: str):
         self.option = option
