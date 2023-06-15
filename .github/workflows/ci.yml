@@ -31,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: matrix.python-version
           architecture: x64
           cache: poetry
 
@@ -45,4 +45,4 @@ jobs:
         uses: codecov/codecov-action@v3
         env: 
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == 3.9
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
