@@ -8,27 +8,41 @@ on:
       - main
     paths:
       - 'mpp/**'
-      - 'setup.py'
+      - 'tests/**'
+      - 'poetry.lock'
+      - 'pyproject.toml'
 
 jobs:
+  # Build
   python-test:
+    name: pytest
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        python: ["3.7", "3.8", "3.9", "3.10"]
+        python: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Install Poetry
+        run: pipx install poetry
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
           architecture: x64
+          cache: poetry
 
       - name: Install pyMalleableProfileParser
-        run: pip3 install .
+        run: poetry install --no-interaction --no-ansi
 
       - name: Run Tests
-        run: python3 -m unittest tests/test.py
+        run: poetry run pytest --cov-report xml --cov=mpp tests/
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env: 
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python == 3.9 }}

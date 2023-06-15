@@ -1,8 +1,19 @@
+"""mpp.statements module: Statement
+"""
 from typing import Set
 from mpp.constants import DELIM
 
 
+__all__ = [
+    "Statement",
+    "HeaderParameter",
+    "StringReplace"
+]
+
+
 class Statement:
+    """Statement Class
+    """
 
     def __init__(self, statement: str, value: str = ''):
         self.statement = statement
@@ -21,6 +32,11 @@ class Statement:
 
 
 class HeaderParameter(Statement):
+    """Header or Parameter Statement
+
+    Args:
+        Statement: _description_
+    """
 
     def __init__(self, statement: str, key: str, value: str = ''):
         super().__init__(statement=statement)
@@ -37,6 +53,11 @@ class HeaderParameter(Statement):
 
 
 class StringReplace(Statement):
+    """String Replace Statement
+
+    Args:
+        Statement: _description_
+    """
 
     def __init__(self, statement: str, string: str, replace: str = ''):
         super().__init__(statement=statement)
