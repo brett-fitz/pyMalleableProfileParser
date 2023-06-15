@@ -53,10 +53,6 @@ class MalleableProfile:
         if isinstance(profile, dict):
             self.profile = profile
         elif isinstance(profile, str):
-            logger.warning(
-                'starting with mpp v0.4, users should leverage the class '
-                'methods to initialize a class object.'
-            )
             with open(file=profile, mode='r', encoding='utf-8') as file:
                 self.profile = Parser.parse_config(file.read().splitlines())
         else:
