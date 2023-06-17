@@ -39,7 +39,7 @@ jobs:
         run: poetry install --no-interaction --no-ansi
 
       - name: Run Tests
-        run: poetry run pytest --cov
+        run: poetry run pytest --cov mpp
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
