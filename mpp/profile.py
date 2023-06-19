@@ -62,6 +62,14 @@ class MalleableProfile:
         else:
             raise TypeError(profile)
 
+    def __str__(self):
+        return "\n".join(
+            [
+                str(item)
+                for key, item in self.profile.items()
+            ]
+        )
+
     @classmethod
     def from_bytes(cls, data: bytes):
         """Parse a Malleable Profile from bytes

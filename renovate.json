@@ -22,11 +22,25 @@
         "minor",
         "patch"
       ]
+    },
+    {
+      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
     }
   ],
   "rangeStrategy": "bump",
   "schedule": "every weekend",
   "extends": [
-    "local>IronNetCybersecurity/renovate-config"
+    ":autodetectPinVersions",
+    ":combinePatchMinorReleases",
+    ":dependencyDashboard",
+    ":ignoreUnstable",
+    ":prConcurrentLimitNone",
+    ":prHourlyLimitNone",
+    ":prImmediately",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":separateMultipleMajorReleases",
+    ":updateNotScheduled",
+    "group:recommended"
   ]
 }
