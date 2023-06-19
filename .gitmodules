@@ -1,0 +1,3 @@
+[submodule "data/Malleable-C2-Profiles"]
+	path = data/Malleable-C2-Profiles
+	url = https://github.com/BC-SECURITY/Malleable-C2-Profiles.git
