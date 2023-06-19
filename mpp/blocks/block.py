@@ -62,9 +62,9 @@ class Block:
                         return i
 
     def __str__(self):
-        if self.variant:
-            return f'{self.name} "{self.variant}" {self.data}'
-        return f'{self.name} {self.data}'
+        name = f'{self.name} "{self.variant}"' if self.variant else self.name
+        block_data = "\n\t".join([str(item) for item in self.data])
+        return f'''{name} {{\n\t{block_data}\n}}'''
 
     def __repr__(self):
         return f'Block(name={self.name}, data={self.data})'
