@@ -1,4 +1,4 @@
-""" Testing: Profile Parsing
+""" Testing: mpp.profile
 """
 from typing import Dict
 
@@ -7,7 +7,7 @@ import pytest
 
 from mpp.profile import MalleableProfile, get_attr_recursively
 
-path = f'{git.Repo(__file__, search_parent_directories=True).working_tree_dir}/tests/'
+path = f'{git.Repo(__file__, search_parent_directories=True).working_tree_dir}/tests/data/'
 
 
 @pytest.mark.parametrize(
@@ -43,7 +43,7 @@ def test_profile_parsing_from_file(profile: str, mapping: Dict):
         profile: Malleable Profile filename
         mapping: Mapping of expected keys and values
     """
-    profile = MalleableProfile.parse_malleable_profile_from_file(profile=path + profile)
+    profile = MalleableProfile.from_file(filename=path + profile)
     for attribute, value in mapping.items():
         assert get_attr_recursively(
             profile=profile,

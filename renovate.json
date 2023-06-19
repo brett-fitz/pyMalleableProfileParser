@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabled": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "git-submodules": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "groupName": "all non-major Python dependencies",
+      "groupSlug": "all-python-minor-patch",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
+    }
+  ],
+  "rangeStrategy": "bump",
+  "schedule": "every weekend",
+  "extends": [
+    "local>IronNetCybersecurity/renovate-config"
+  ]
+}

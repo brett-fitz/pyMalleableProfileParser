@@ -1,14 +1,16 @@
 """mpp module: Profile
 """
 import logging
+import re
 from typing import Any, Dict, List, Tuple, Union
+
+import regex
 
 from mpp.blocks import Block
 from mpp.constants import (DNS_BEACON_OPTIONS, GLOBAL_OPTIONS, INVALID_BLOCK,
                            INVALID_OPTION, INVALID_VARIANT, PROFILE_BLOCKS,
                            PROFILE_VARIANTS)
 from mpp.options import Option
-from mpp.parser import Parser
 
 
 # logger
@@ -53,13 +55,15 @@ class MalleableProfile:
         if isinstance(profile, dict):
             self.profile = profile
         elif isinstance(profile, str):
-            with open(file=profile, mode='r', encoding='utf-8') as file:
-                self.profile = Parser.parse_config(file.read().splitlines())
+            if '{' in profile:
+                self.profile = self.from_string(string=profile)
+            else:
+                self.profile = self.from_file(filename=profile).profile
         else:
             raise TypeError(profile)
 
     @classmethod
-    def parse_malleable_profile_from_bytes(cls, profile: bytes):
+    def from_bytes(cls, data: bytes):
         """Parse a Malleable Profile from bytes
 
         Args:
@@ -68,12 +72,10 @@ class MalleableProfile:
         Returns:
             MalleableProfile object
         """
-        return cls(
-            profile=Parser.parse_config(profile.decode('utf-8').splitlines())
-        )
+        return cls.from_string(string=data.decode('utf-8'))
 
     @classmethod
-    def parse_malleable_profile_from_file(cls, profile: str):
+    def from_file(cls, filename: str):
         """Parse Malleable Profile from file
 
         Args:
@@ -82,10 +84,42 @@ class MalleableProfile:
         Returns:
             MalleableProfile object
         """
-        with open(file=profile, mode='r', encoding='utf-8') as file:
-            return cls(
-                profile=Parser.parse_config(file.read().splitlines())
+        with open(file=filename, mode='r', encoding='utf-8') as file:
+            return cls.from_string(string=file.read())
+
+    @classmethod
+    def from_string(cls, string: str) -> Dict:
+        """Parse a Malleable Profile from a string and return
+        a dictionary object containing a mapping of keys to
+        objects. An object can be a Block, Statement, or Option.
+
+        Args:
+            profile: Malleable Profile.
+
+        Returns:
+            Parsed profile mapping.
+        """
+        profile = {}
+        # Loop through root blocks
+        blocks = regex.finditer(Block.BLOCK_REGEX, string, flags=re.MULTILINE | re.DOTALL)
+        for match in blocks:
+            profile[match.groups()[0]] = Block.from_string(string=match.group())
+        # Get global options
+        options = Option.from_string(
+            string="".join(
+                [
+                    item
+                    for item in regex.split(Block.NON_BLOCK_DATA_REGEX, string, flags=re.MULTILINE | re.DOTALL)
+                    if item is not None
+                ]
             )
+        )
+        if options:
+            for option in options:
+                profile[option.option] = option
+        return cls(
+            profile=profile
+        )
 
     def validate(self, version: int = 4.0) -> Union[bool, List[Tuple]]:
         """Validate a Malleable Profile
