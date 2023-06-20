@@ -28,7 +28,7 @@ class Block:
     # Regex to parse blocks with support for variants
     # https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/malleable-c2_profile-variants.htm
     BLOCK_REGEX = r'^\s*([\w\-\_]+)\s*(?:"([\w\s]+)"\s*)?(\{(?:[^{}"\']+|\'(?:[^\']+|\\.)*\'|"(?:[^"\\]+|\\.)*"|(?R))*\})'
-    NON_BLOCK_DATA_REGEX = r'\{(?:[^{}]*|(?R))*\}'
+    NON_BLOCK_DATA_REGEX = r'\{(?:[^{}"\']+|\'(?:[^\']+|\\.)*\'|"(?:[^"\\]+|\\.)*"|(?R))*\}'
 
     def __init__(self, name: str, data: List, variant: str = None):
         self.name = name
@@ -61,10 +61,16 @@ class Block:
                     if tmp == i.value or item == i.value:
                         return i
 
-    def __str__(self):
-        name = f'{self.name} "{self.variant}"' if self.variant else self.name
-        block_data = "\n\t".join([str(item) for item in self.data])
-        return f'''{name} {{\n\t{block_data}\n}}'''
+    def __str__(self, depth: int = 1):
+        def generate_string(obj, curr_depth):
+            indentation = '\t' * curr_depth
+            if isinstance(obj, Block):
+                name = f'{obj.name} "{obj.variant}"' if obj.variant else obj.name
+                block_data = [generate_string(item, curr_depth + 1) for item in obj.data]
+                block_string = f"\n{indentation}".join(block_data)
+                return f'{name} {{\n{indentation}{block_string}\n{indentation[:-1]}}}'
+            return str(obj)
+        return generate_string(self, depth)
 
     def __repr__(self):
         return f'Block(name={self.name}, data={self.data})'
@@ -80,6 +86,19 @@ class Block:
             item
             for item in self.data
             if isinstance(item, Option)
+        ]
+
+    @property
+    def statements(self) -> List:
+        """Get all statements in the root block
+
+        Returns:
+            _description_
+        """
+        return [
+            item
+            for item in self.data
+            if isinstance(item, Statement)
         ]
 
     @classmethod
@@ -105,7 +124,7 @@ class Block:
             non_block_data = "".join(
                 [
                     item
-                    for item in regex.split(Block.BLOCK_REGEX, block.groups()[2][1:-1], flags=re.MULTILINE | re.DOTALL)
+                    for item in regex.split(Block.NON_BLOCK_DATA_REGEX, block.groups()[2].strip()[1:-1], flags=re.MULTILINE)
                     if item is not None
                 ]
             )

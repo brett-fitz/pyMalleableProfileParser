@@ -36,6 +36,8 @@ path = f'{git.Repo(__file__, search_parent_directories=True).working_tree_dir}/t
             'mayoclinic.profile',
             {
                 'useragent.value': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
+                'http_config.headers.value': 'Content-Type, Connection, Server, Link, X-Cache',
+                'http_config.Link.value': "<https://newsnetwork.mayoclinic.org/wp-json/>; rel=\\\"https://api.w.org/\\\"",
                 'http_get.uri.value': '/discussion/mayo-clinic-radio-als/ /discussion/ /hubcap/mayo-clinic-radio-full-shows/ /category/research-2/',
                 'http_get.client.Accept.value': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'stage.transform_x86.ReflectiveLoader.replace': ''

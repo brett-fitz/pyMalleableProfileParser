@@ -108,10 +108,7 @@ class MalleableProfile:
             Parsed profile mapping.
         """
         profile = {}
-        # Loop through root blocks
-        blocks = regex.finditer(Block.BLOCK_REGEX, string, flags=re.MULTILINE | re.DOTALL)
-        for match in blocks:
-            profile[match.groups()[0]] = Block.from_string(string=match.group())
+
         # Get global options
         options = Option.from_string(
             string="".join(
@@ -125,6 +122,13 @@ class MalleableProfile:
         if options:
             for option in options:
                 profile[option.option] = option
+
+        # Loop through root blocks
+        blocks = regex.finditer(Block.BLOCK_REGEX, string, flags=re.MULTILINE | re.DOTALL)
+        for match in blocks:
+            profile[match.groups()[0]] = Block.from_string(string=match.group())
+
+        # Return class object
         return cls(
             profile=profile
         )

@@ -87,7 +87,7 @@ class HeaderParameter(Statement):
         Statement: _description_
     """
     STATEMENT_REGEX = re.compile(
-        r'(header|parameter)\s+"([^"]+)"\s+"([^"]+)"\s*;',
+        r'^\s*(header|parameter)\s+"([^"]+)"\s+"((?:[^"\\]|\\.)+)"\s*;',
         flags=re.MULTILINE
     )
 
