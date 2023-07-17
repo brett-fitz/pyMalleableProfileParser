@@ -4,6 +4,13 @@ on:
   # manual trigger
   workflow_dispatch:
   push:
+    branches:
+      - main
+    paths:
+      - 'mpp/**'
+      - 'tests/**'
+      - 'poetry.lock'
+      - 'pyproject.toml'
   pull_request:
     branches:
       - main
