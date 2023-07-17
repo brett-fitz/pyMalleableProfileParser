@@ -37,7 +37,7 @@ class MalleableProfile:
     """MalleableProfile Class
     """
 
-    def __init__(self, profile: Union[str, Dict]):
+    def __init__(self, profile: Union[str, List]):
         """Init Class Object
 
         Usage:
@@ -52,7 +52,7 @@ class MalleableProfile:
         Raises:
             FileNotFoundError: _description_
         """
-        if isinstance(profile, dict):
+        if isinstance(profile, list):
             self.profile = profile
         elif isinstance(profile, str):
             if '{' in profile:
@@ -66,9 +66,35 @@ class MalleableProfile:
         return "\n".join(
             [
                 str(item)
-                for key, item in self.profile.items()
+                for item in self.profile
             ]
         )
+
+    @property
+    def blocks(self) -> List:
+        """Get all root blocks
+
+        Returns:
+            List of root blocks.
+        """
+        return [
+            item
+            for item in self.profile
+            if isinstance(item, Block)
+        ]
+
+    @property
+    def options(self) -> List:
+        """Get all global options
+
+        Returns:
+            List of global options.
+        """
+        return [
+            item
+            for item in self.profile
+            if isinstance(item, Option)
+        ]
 
     @classmethod
     def from_bytes(cls, data: bytes):
@@ -107,7 +133,7 @@ class MalleableProfile:
         Returns:
             Parsed profile mapping.
         """
-        profile = {}
+        profile = []
 
         # Get global options
         options = Option.from_string(
@@ -121,12 +147,12 @@ class MalleableProfile:
         )
         if options:
             for option in options:
-                profile[option.option] = option
+                profile.append(option)
 
         # Loop through root blocks
         blocks = regex.finditer(Block.BLOCK_REGEX, string, flags=re.MULTILINE | re.DOTALL)
         for match in blocks:
-            profile[match.groups()[0]] = Block.from_string(string=match.group())
+            profile.append(Block.from_string(string=match.group()))
 
         # Return class object
         return cls(
@@ -142,38 +168,43 @@ class MalleableProfile:
         Returns:
             _description_
         """
-        keys = [*self.profile]
         invalid_values = []
-        for i in keys:
+        for item in self.profile:
             # blocks
-            if isinstance(self.profile[i], Block) and self.profile[i].name not in PROFILE_BLOCKS:
-                invalid_values.append((self.profile[i], INVALID_BLOCK))
-            elif isinstance(self.profile[i], Block) and self.profile[i].name in PROFILE_BLOCKS:
+            if isinstance(item, Block) and item.name not in PROFILE_BLOCKS:
+                invalid_values.append((item, INVALID_BLOCK))
+            elif isinstance(item, Block) and item.name in PROFILE_BLOCKS:
                 # check if variant and if allowed
-                if self.profile[i].variant:
-                    if self.profile[i] not in PROFILE_VARIANTS:
-                        invalid_values.append((self.profile[i], INVALID_VARIANT))
-                tmp = self.profile[i].validate()
+                if item.variant:
+                    if item not in PROFILE_VARIANTS:
+                        invalid_values.append((item, INVALID_VARIANT))
+                tmp = item.validate()
                 if isinstance(tmp, List):
                     invalid_values += tmp
-            elif isinstance(self.profile[i], Option) and self.profile[i].option not in GLOBAL_OPTIONS:
+            elif isinstance(item, Option) and item.option not in GLOBAL_OPTIONS:
                 # check if dns-beacon option (4.0-4.2)
-                if self.profile[i].option in DNS_BEACON_OPTIONS:
+                if item.option in DNS_BEACON_OPTIONS:
                     if version >= 4.3:
-                        invalid_values.append((self.profile[i], INVALID_OPTION))
+                        invalid_values.append((item, INVALID_OPTION))
                     else:
-                        logger.warning(f'starting with v4.3, dns options have been moved into \'dns-beacon\' block: '
-                                       f'{self.profile[i].option}')
+                        logger.warning(
+                            f'starting with v4.3, dns options have been moved into '
+                            f'\'dns-beacon\' block: {item.option}'
+                        )
         if invalid_values:
             return invalid_values
         return True
 
-    def __getattr__(self, item):
-        try:
-            return self.profile[item.replace('_', '-')]
-        except KeyError:
-            return self.profile[item]
-
+    def __getattr__(self, item) -> Union[Block, Option, None]:
+        # TODO return all matches for statements
+        tmp = item.replace('_', '-')
+        for i in self.profile:
+            if isinstance(i, Block):
+                if i.name in (tmp, item):
+                    return i
+            elif isinstance(i, Option):
+                if i.option in (tmp, item):
+                    return i
 
 def get_attr_recursively(profile, attribute: str) -> Any:
     """Recursive implementation to get a profile attribute.

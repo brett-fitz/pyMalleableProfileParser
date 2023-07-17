@@ -3,6 +3,7 @@ name: 'CI: pyMalleableProfileParser'
 on:
   # manual trigger
   workflow_dispatch:
+  push:
   pull_request:
     branches:
       - main

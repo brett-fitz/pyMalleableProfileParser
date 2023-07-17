@@ -1,7 +1,7 @@
 # Roadmap
 Roadmap for the project.
 
-*Updated: 2023-06-15*
+*Updated: 2023-07-16*
 
 ## [0.4] :construction:
 * Allow modification to Malleable Profiles
@@ -9,6 +9,9 @@ Roadmap for the project.
 * Poetry
 * Code Coverage
 * Move from Unittest to Pytest
+* Add support for options introduced in 4.6+
+* Add support for profile variants
+
 
 ## [0.3] :rocket:
 * Validate Malleable Profiles

@@ -90,7 +90,10 @@ GLOBAL_OPTIONS: Set[str] = {
     'ssh_pipename',
     'tcp_frame_header',
     'tcp_port',
-    'useragent'
+    'useragent',
+    'tasks_max_size',           # added in 4.6
+    'tasks_proxy_max_size',     # added in 4.6
+    'tasks_dns_proxy_max_size'  # added in 4.6
 }
 
 # Blocks
@@ -235,6 +238,7 @@ STAGE_OPTIONS: Set[str] = {
     'smartinject',
     'userwx',
     'stomppe',
+    'syscall_method',           # added in 4.8
     'checksum',
     'compile_time',
     'entry_point',
@@ -252,6 +256,8 @@ PROCESS_INJECT_BLOCKS: Set[str] = {
 }
 PROCESS_INJECT_OPTIONS: Set[str] = {
     'allocator',
+    'bof_allocator',            # added in 4.7
+    'bof_reuse_memory',         # added in 4.7
     'min_alloc',
     'startrwx',
     'userwx'
