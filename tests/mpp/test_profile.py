@@ -7,6 +7,7 @@ import pytest
 
 from mpp.profile import MalleableProfile, get_attr_recursively
 
+
 path = f'{git.Repo(__file__, search_parent_directories=True).working_tree_dir}/tests/data/'
 
 
