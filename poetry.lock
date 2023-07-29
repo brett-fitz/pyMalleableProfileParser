@@ -379,13 +379,13 @@ files = [
 
 [[package]]
 name = "ipykernel"
-version = "6.24.0"
+version = "6.25.0"
 description = "IPython Kernel for Jupyter"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "ipykernel-6.24.0-py3-none-any.whl", hash = "sha256:2f5fffc7ad8f1fd5aadb4e171ba9129d9668dbafa374732cf9511ada52d6547f"},
-    {file = "ipykernel-6.24.0.tar.gz", hash = "sha256:29cea0a716b1176d002a61d0b0c851f34536495bc4ef7dd0222c88b41b816123"},
+    {file = "ipykernel-6.25.0-py3-none-any.whl", hash = "sha256:f0042e867ac3f6bca1679e6a88cbd6a58ed93a44f9d0866aecde6efe8de76659"},
+    {file = "ipykernel-6.25.0.tar.gz", hash = "sha256:e342ce84712861be4b248c4a73472be4702c1b0dd77448bfd6bcfb3af9d5ddf9"},
 ]
 
 [package.dependencies]
@@ -782,17 +782,17 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pylint"
-version = "2.17.4"
+version = "2.17.5"
 description = "python code static checker"
 optional = false
 python-versions = ">=3.7.2"
 files = [
-    {file = "pylint-2.17.4-py3-none-any.whl", hash = "sha256:7a1145fb08c251bdb5cca11739722ce64a63db479283d10ce718b2460e54123c"},
-    {file = "pylint-2.17.4.tar.gz", hash = "sha256:5dcf1d9e19f41f38e4e85d10f511e5b9c35e1aa74251bf95cdd8cb23584e2db1"},
+    {file = "pylint-2.17.5-py3-none-any.whl", hash = "sha256:73995fb8216d3bed149c8d51bba25b2c52a8251a2c8ac846ec668ce38fab5413"},
+    {file = "pylint-2.17.5.tar.gz", hash = "sha256:f7b601cbc06fef7e62a754e2b41294c2aa31f1cb659624b9a85bcba29eaf8252"},
 ]
 
 [package.dependencies]
-astroid = ">=2.15.4,<=2.17.0-dev0"
+astroid = ">=2.15.6,<=2.17.0-dev0"
 colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
 dill = [
     {version = ">=0.2", markers = "python_version < \"3.11\""},
@@ -1294,4 +1294,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "0c1ec9a0675419a67d04736e530fb7ddefbe1b21b643ec12c2b7dc51062b5d9b"
+content-hash = "891ab13a7bc0e63f86ce02176f8a2dc9cc5f5d0d54c84f7f784fd3bdcf7cb3f8"
