@@ -1,6 +1,9 @@
 [submodule "data/Malleable-C2-Profiles"]
-	path = data/Malleable-C2-Profiles
+	path = data/BC-Malleable-C2-Profiles
 	url = https://github.com/BC-SECURITY/Malleable-C2-Profiles.git
 [submodule "data/malleable-c2"]
 	path = data/malleable-c2
 	url = https://github.com/threatexpress/malleable-c2.git
+[submodule "data/rsmudge-Malleable-C2-Profiles"]
+	path = data/rsmudge-Malleable-C2-Profiles
+	url = https://github.com/rsmudge/Malleable-C2-Profiles.git
