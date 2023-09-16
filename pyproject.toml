@@ -21,7 +21,7 @@ regex = "^2023.8.8"
 pytest = "^7.4.2"
 pylint = "^2.17.5"
 ipykernel = "^6.25.2"
-gitpython = "^3.1.35"
+gitpython = "^3.1.36"
 pytest-cov = "^4.1.0"
 
 [build-system]
