@@ -3,6 +3,7 @@
 import logging
 import re
 from typing import Any, Dict, List, Tuple, Union
+import pathlib
 
 import regex
 
@@ -54,6 +55,8 @@ class MalleableProfile:
         """
         if isinstance(profile, list):
             self.profile = profile
+        elif isinstance(profile, pathlib.Path):
+            self.profile = self.from_file(filename=profile).profile
         elif isinstance(profile, str):
             if '{' in profile:
                 self.profile = self.from_string(string=profile)
