@@ -4,9 +4,9 @@ Package-wide utility functions are stored here.
 """
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
-def find_malleable_profiles() -> List[str]:
+def find_malleable_profiles() -> List[Dict[str, str]]:
     """Find directory locations for malleable profiles in submodules
 
     Returns:
@@ -14,6 +14,11 @@ def find_malleable_profiles() -> List[str]:
     """
 
     path = Path(__file__).resolve().parent.parent / 'data'
-    profiles = path.rglob('*')
-    profiles = [file for file in profiles if str(file).endswith('.profile')]
+    sources = [source for source in path.iterdir() if source.is_dir()]
+    
+    profiles = {}
+    for source in sources:
+        found_profiles = [profile for profile in source.rglob('*') if str(profile).endswith('.profile')]
+        if found_profiles:
+            profiles[source.name] = found_profiles
     return profiles

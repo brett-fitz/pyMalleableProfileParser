@@ -50,15 +50,13 @@ class MalleableProfileFinder:
         # if profile_dir:
         #     find_malleable_profiles(profile_dir)
 
-        profile_files = find_malleable_profiles()
-        if not profile_files:
-            raise(SubmodulesNotLoaded())
+        self.malleable_profiles = self.load_profiles()
 
-        self.malleable_profiles = self.load_profiles(profile_files)
+        self.search_profile = profile
 
 
     @staticmethod
-    def load_profiles(profile_files: List[os.PathLike]) -> Dict:
+    def load_profiles(profile_files: Dict[str, List[Union[os.PathLike, str]]] = None) -> Dict:
         """Parses a list of malleable profile files and returns MalleableProfile objects
 
         Args:
@@ -67,11 +65,22 @@ class MalleableProfileFinder:
         Returns:
             Dictionary of parsed profiles with a key of the repository/submodule they came from
         """
+
+        if not profile_files:
+            profile_files = find_malleable_profiles()
+            if not profile_files:
+                raise(SubmodulesNotLoaded())
+        
+        print(profile_files)
         parsed_profiles = {}
-        for file in profile_files:
-            profile = MalleableProfile(profile=file)
-            if not parsed_profiles.get(file.parent):
-                parsed_profiles[file.parent] = {}
-            parsed_profiles[file.parent][file.name] = profile
+        for source, files in profile_files.items():
+            for file in files:
+                profile = MalleableProfile(profile=file)
+                if not parsed_profiles.get(source):
+                    parsed_profiles[source] = {}
+
+                parsed_profiles[source][file] = profile
         
         return parsed_profiles
+
+    #def find_profile
