@@ -14,7 +14,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.12.1"
+python = "^3.12.2"
 regex = "^2023.12.25"
 
 [tool.poetry.group.dev.dependencies]
