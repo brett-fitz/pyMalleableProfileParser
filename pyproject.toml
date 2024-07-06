@@ -20,7 +20,7 @@ regex = "^2023.12.25"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.4"
 pylint = "^2.17.7"
-ipykernel = "^6.29.4"
+ipykernel = "^6.29.5"
 gitpython = "^3.1.43"
 pytest-cov = "^4.1.0"
 
