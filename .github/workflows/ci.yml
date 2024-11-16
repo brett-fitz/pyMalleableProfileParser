@@ -50,7 +50,7 @@ jobs:
         run: poetry run pytest --cov mpp
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         env: 
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.python == 3.9 }}
